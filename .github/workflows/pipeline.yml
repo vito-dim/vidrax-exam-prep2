@@ -50,7 +50,7 @@ jobs:
         run: echo "vidrax"
 
   deploy-in-production:
-    needs: build-UI-tests
+    needs: build-ui-tests
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
