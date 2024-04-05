@@ -1,4 +1,4 @@
-name: Build-Test
+name: Build-Test-Deploy
 
 on:
   push:
@@ -10,7 +10,6 @@ on:
 jobs:
 
   build-unit-tests:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -26,7 +25,7 @@ jobs:
       - name: Run Unit tests
         run: npm run test:unit
 
-  build-UI-tests:
+  build-ui-tests:
     needs: build-unit-tests
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -49,3 +48,15 @@ jobs:
         run: npm run test:ui
       - name: Display your softuni username
         run: echo "vidrax"
+
+  deploy-in-production:
+    needs: build-UI-tests
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to production
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_ID }}
+          api-key: ${{ secrets.RENDER_KEY }}
